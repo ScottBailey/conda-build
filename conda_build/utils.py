@@ -969,6 +969,11 @@ def get_stdlib_dir(prefix, py_ver):
         python_folder = glob(os.path.join(lib_dir, 'python?.*'))
         python_folder = sorted(filterfalse(islink, python_folder))
         if python_folder:
+            # In case of multiple paths, first try to pick one that matches the users requested version.
+            for temp in python_folder:
+                if(temp.endswith(py_ver)):
+                    return os.path.join(lib_dir,temp)
+            # Couldn't match version, so just take the first in the list.
             lib_dir = os.path.join(lib_dir, python_folder[0])
         else:
             lib_dir = os.path.join(lib_dir, f'python{py_ver}')
